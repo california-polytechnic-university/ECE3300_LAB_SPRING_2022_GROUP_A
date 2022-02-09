@@ -1,1 +1,14 @@
-
+module DEC(
+    input [1:0] S,
+    output [3:0] P
+    );
+    wire s0_neg;
+    wire s1_neg;
+    not(s0_neg,S[0]);
+    not(s1_neg,S[1]);
+    and(P[0],s1_neg,s0_neg);
+    and(P[1],s1_neg,S[0]);
+    and(P[2],S[1],s0_neg);
+    and(P[3],S[1],S[0]);
+    
+endmodule
