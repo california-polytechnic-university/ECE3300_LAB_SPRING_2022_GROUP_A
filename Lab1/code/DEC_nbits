@@ -1,0 +1,29 @@
+module DEC_nbits
+ #(parameter DATA_WIDTH=3
+ )
+ 
+    (
+    input [DATA_WIDTH-2:0] S_nbits,
+    output [(2**DATA_WIDTH)-1:0] P_nbits
+    );
+    
+            
+            DEC UNIT0(
+                    .S(S_nbits),
+                    .P(P_nbits)
+                );
+       
+   genvar i;
+        generate
+            for(i=1;i<(2**DATA_WIDTH)/4;i=i+1)
+                begin
+                
+            DEC UNIT1(
+                .S(S_nbits),
+                .P(P_nbits[4*i+3:4*i])
+                );
+                
+            end
+            endgenerate
+        
+endmodule
