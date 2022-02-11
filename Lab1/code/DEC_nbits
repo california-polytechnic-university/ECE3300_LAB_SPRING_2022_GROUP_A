@@ -1,29 +1,76 @@
-module DEC_nbits
- #(parameter DATA_WIDTH=3
- )
- 
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 02/09/2022 05:35:05 PM
+// Design Name: 
+// Module Name: DEC2X4_nbits
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module DEC2X4_nbits
+#(parameter DATA_WIDTH = 2)
     (
-    input [DATA_WIDTH-2:0] S_nbits,
-    output [(2**DATA_WIDTH)-1:0] P_nbits
+    input [DATA_WIDTH-1:0] S_nbits,
+    output [(2**DATA_WIDTH)-1:0] P_nbits,
+    input [(2**(DATA_WIDTH-2))-1:0]En_nbits,
+    wire [(2**(DATA_WIDTH-2))-1:0] temp_nbits
     );
-    
-            
-            DEC UNIT0(
-                    .S(S_nbits),
-                    .P(P_nbits)
-                );
-       
-   genvar i;
-        generate
-            for(i=1;i<(2**DATA_WIDTH)/4;i=i+1)
-                begin
-                
-            DEC UNIT1(
-                .S(S_nbits),
-                .P(P_nbits[4*i+3:4*i])
-                );
-                
-            end
-            endgenerate
+   
         
+            DEC2X4 UNIT0
+            (
+            .S(S_nbits),
+            .P(P_nbits),
+            .En(temp_nbits)//making it .En(En_nbits) fixes 2x4 breaks 3x8
+            
+            );
+           
+           
+               genvar i;
+                generate
+               
+                    for(i=1;i<(2**DATA_WIDTH)/4;i=i+1)
+                       begin 
+                        
+                        DEC2X4 UNIT1
+                        (
+                            .S(S_nbits[i*2-1:i/i-1]),
+                            .P(P_nbits[4*i+3:4*i]),
+                            .En(temp_nbits[i*2/2])
+                        );
+        
+                        end
+                    endgenerate
+               
+         
+    assign temp_nbits[0]=~S_nbits[2];
+    assign temp_nbits[1]=S_nbits[2];
+   
+    //assign temp_nbits[0]=~S_nbits[3];
+    //assign temp_nbits[1]=S_nbits[3];
+    assign temp_nbits[2]=S_nbits[3];
+    //assign temp_nbits[3]=S_nbits[3];
+    //assign temp_nbits[0]=0;
+    //assign temp_nbits[1]=S_nbits[2:0];
+    //assign temp_nbits[2]=temp_nbits[0];
+    
+    
+    
+    //assign temp_nbits[0]=~S_nbits[3];
+    //assign temp_nbits[1]=~S_nbits[3];
+    //assign temp_nbits[2]=S_nbits[3];
+    
 endmodule
