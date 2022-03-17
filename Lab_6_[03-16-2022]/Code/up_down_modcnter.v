@@ -23,25 +23,32 @@
 module up_down_modcnter
     #(parameter Digits=8)
     (
+        input [3:0] dec_input,
         input clk,
         input rst,
         input Ud,
         input En,
-        input load,
+        input [Digits-1:0] load,
         input [3:0] inp_mod,
         
-        output [Digits*4-1:0] cnt_mod
-        
+        output [Digits*4-1:0] cnt_mod,
+        output dec_out
         
     );
-    
+    //reg [7:0] inp_mod_tmp;
     wire [Digits-1:0] done;
+    wire [Digits-1:0] dec_out_tmp;
+      dec_3x8 EN_DECODER(
+            .select(dec_input),
+            .out(dec_out_tmp)
+            );
     
-        
+
+    
         up_downcounter_1dig UN0(
                         .clk(clk), 
                         .rst(rst),
-                        .En(En),
+                        .En(dec_out_tmp[0]),
                         .Ud(Ud),
                         .load(load),
                         .inp(inp_mod),
@@ -57,10 +64,10 @@ module up_down_modcnter
                 up_downcounter_1dig UN(
                                        .clk(clk), 
                                        .rst(rst),
-                                       .En(done[i-1]),
+                                       .En(dec_out_tmp[i]),
                                        .Ud(Ud),
                                        .load(load),
-                                       //.inp(inp_mod),
+                                       .inp(inp_mod),
                                        .cnt(cnt_mod[4*i+3:4*i]),
                                        .En_nxt(done[i])
                                        );

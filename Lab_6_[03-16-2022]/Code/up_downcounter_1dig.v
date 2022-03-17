@@ -32,10 +32,10 @@ module up_downcounter_1dig(
     
     );
     reg [3:0] tmp=0;
-    reg done;
-    reg [9:0] inp_tmp;
+    //reg done;
+    //reg inp_tmp;
     
-    always@(inp or load)
+    /*always@(posedge clk or posedge rst)
     begin   
     case(inp)
     4'b0000: inp_tmp = 0;
@@ -49,62 +49,43 @@ module up_downcounter_1dig(
     4'b1000: inp_tmp = 8;
     4'b1001: inp_tmp = 9;
     endcase  
-    end
+    end*/
     
     always@(posedge clk or posedge rst)
-    begin
-    
- 
-        
-    if(rst)
-            begin
-                tmp <= 4'd0;
-                end
-        else
-            if(load)
-               begin
-               
-               tmp <= inp_tmp;
-               end
-            else
-                if(En)
-                    begin
-                        if(Ud)//count down
-                        begin
-                            if(tmp > 4'd0)
-                                begin
-                                tmp <= tmp-1;
-                                done <= 0;
-                                end
-                            else
-                                if(tmp == 4'd0)
-                                    tmp <= 4'd9;
-                                if(tmp == 4'd1)
-                                    done <= 1;
-                                else
-                                    done <= 0;
-                        end
-                        else
-                            if(~Ud)     
-                                begin
-                                    if(tmp < 4'd9)        
-                                        begin
-                                        tmp <= tmp+1;
-                                        done <= 0;
-                                        end
-                                    else
-                                        if(tmp == 4'd9)
-                                            tmp <= 4'd0;
-                                        if(tmp == 4'd8)
-                                            done <= 1;
-                                        else
-                                            done <=0;
-                               end
-                    end
-            
+    begin:UP_DOWN_COUNT
+        if(rst)
+            tmp <= 0;
+        else 
+        begin
+            if(En)
+               begin:Active_Counting
+                   if(load)
+                       tmp <= inp;
+                   else
+                   
+                       if(Ud)//count down
+                       begin
+                           if(tmp > 0)
+                              tmp <= tmp-1;
+                           else
+                              tmp <= 9;
+                               
+                       end
+                       else 
+                       
+                           if(~Ud)     
+                               begin
+                                   if(tmp < 9)        
+                                       tmp <= tmp+1;
+                                   else
+                                      tmp <= 0;
+                              end
+                                
+               end     
+        end   
   end
              
    assign cnt = tmp;
-   assign En_nxt = done & En;
-   
+   assign En_nxt = tmp[3] & tmp[0] & En;
+
 endmodule

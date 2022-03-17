@@ -27,6 +27,7 @@ module Top
     input sys_rst,
     input Ud,
     input load,
+    input [2:0] dec_input,
     input [3:0] inp_top,
     input [4:0] SW_SPEED,
     input dir,
@@ -65,6 +66,7 @@ module Top
                                             .rst(sys_rst),
                                             .En(En),
                                             .load(load),
+                                            .dec_input(dec_input),
                                             .inp_mod(inp_tmp_top),
                                             .Ud(Ud),
                                             .cnt_mod(UP_SEG)
@@ -80,5 +82,12 @@ module Top
                                        .dp(dp), 
                                        .AN(AN_top)
                                        );
+    
+
+                                       
+                                      
+
+                               
+
     
 endmodule
