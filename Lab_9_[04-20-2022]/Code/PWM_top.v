@@ -25,19 +25,15 @@ module PWM_top
                     (
                      input clk,
                      input rst,
-                     input switch,
-                     //input load_r, 
-                     //input load_g, 
-                     //input load_b, 
+                     input switch, 
                      input [SIZE-1:0] Duty,
                      output wire [2:0] RGB_LEDa,RGB_LEDb
                      );
 wire clk_slow;
-wire lock; 
-wire clk_locked; 
 wire PWM_r;
 wire PWM_g;
 wire PWM_b;
+
 clk_wiz_0 CLK_GEN_SLOW
                          (
                           // Clock out ports
@@ -75,10 +71,10 @@ wire [2:0] PWM_RGB;
                                 .duty(Duty[11:8]),
                                 .PWM(PWM_b)
                              );
-assign PWM_RGB = {PWM_r,PWM_b,PWM_g};
+assign PWM_RGB = {PWM_r,PWM_g,PWM_b};
 Choose(
     .sel(PWM_RGB),
-    .change_in(switch),//button
+    .change_state(switch),//button
     .rst(rst),
     .clk(clk_slow),
     .LED1(RGB_LEDa),
