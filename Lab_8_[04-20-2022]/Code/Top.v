@@ -111,7 +111,10 @@ module Top
                          
           assign Sela[1:0] = {UP_counter_output[2], UP_counter_output[0]};
           assign Selb[1:0] = {UP_counter_output[3], UP_counter_output[1]};
-            wire [3:0] BS_OPA;
+          assign LED[14:13] = Selb[1:0];
+          assign LED[11:10] = Sela[1:0];
+          wire [3:0] BS_OPA;
+           
             Barrel_Shifter BS_1  ( 
                                  .Sel_shift(sel_tmp[0]),
                                  .Sel(Sela),
@@ -152,9 +155,7 @@ module Top
         
         
         assign ALU_OPC[7:0] = { inp_tmp_top_b[3:0] , inp_tmp_top_a[3:0] };
-        //assign ALU_OPC[15:8] = { BS_OPA[3:0] , UP_SEGa[3:0] };
-        //assign ALU_OPC[23:16] = { BS_OPB[3:0] , UP_SEGb[3:0] };
-        //assign Output_to_disp[15:0] = {ALU_tmp[7:0] , ALU_OPC[7:0]};
+        
         assign Output_to_disp[7:0]   = ALU_OPC[7:0];
         assign Output_to_disp[11:8]  = UP_SEGa_td[3:0];
         assign Output_to_disp[15:12] = BS_OPA_td[3:0];
@@ -167,7 +168,6 @@ module Top
         seg7_wrapper DISPLAY(
                            .clk(CLK),
                            .rst(rst),
-                           //.dir(),
                            .Cnode(Cnode_top),
                            .SW(Output_to_disp),
                            .dp(dp), 
